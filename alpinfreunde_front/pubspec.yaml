@@ -38,6 +38,7 @@ dependencies:
   stacked: ^3.4.1+1
   get_it: ^7.6.4
   rxdart: ^0.27.7
+  responsive_framework: ^1.1.1
 
 dev_dependencies:
   flutter_test:
