@@ -12,12 +12,33 @@ class DashboardView extends StackedView<DashboardModel> {
       BuildContext context, DashboardModel viewModel, Widget? child) {
     return Scaffold(
       body: Center(
-          child: ResponsiveRowColumn(
-        layout: ResponsiveRowColumnType.COLUMN,
-        children: [
-          
-        ],
-      ),),
+        child: ResponsiveRowColumn(
+          layout: viewModel.test.value,
+          columnCrossAxisAlignment: CrossAxisAlignment.center,
+          columnMainAxisAlignment: MainAxisAlignment.center,
+          rowCrossAxisAlignment: CrossAxisAlignment.center,
+          rowMainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const ResponsiveRowColumnItem(
+              columnFlex: 1,
+              child: Text("datadata"),
+            ),
+            const ResponsiveRowColumnItem(
+              columnFlex: 2,
+              columnFit: FlexFit.tight,
+              child: Text("datadata"),
+            ),
+            ResponsiveRowColumnItem(
+              columnFlex: 3,
+              columnFit: FlexFit.tight,
+              child: OutlinedButton(
+                onPressed: viewModel.click,
+                child: Text("Click me!"),
+              ),
+            )
+          ],
+        ),
+      ),
       bottomNavigationBar: ResponsiveBreakpoints.of(context).isMobile
           ? BottomNavigationBar(items: const [
               BottomNavigationBarItem(
@@ -30,6 +51,6 @@ class DashboardView extends StackedView<DashboardModel> {
 
   @override
   DashboardModel viewModelBuilder(BuildContext context) {
-    return DashboardModel();
+    return DashboardModel()..init();
   }
 }
