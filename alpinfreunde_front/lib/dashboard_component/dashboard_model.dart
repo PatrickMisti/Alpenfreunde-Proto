@@ -1,25 +1,26 @@
 import 'dart:async';
-
+import 'package:alpinfreunde_front/models/sidebarItem.dart';
+import 'package:alpinfreunde_front/routing.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
 
 class DashboardModel extends BaseViewModel with Disposable {
-  late BehaviorSubject<ResponsiveRowColumnType> test;
+
+  final List<SidebarItem> sidebar = [
+    SidebarItem(title: "Termin erstellen", icons: const Icon(Icons.add), routing: RoutingEnum.creation),
+    SidebarItem(title: "Terminübersicht", icons: const Icon(Icons.list), routing: RoutingEnum.appointment),
+    SidebarItem(title: "Einstellungen", icons: const Icon(Icons.settings), routing: RoutingEnum.settings),
+  ];
+
+  RoutingEnum _currentView = RoutingEnum.creation;
+
+  RoutingEnum get currentRoute => _currentView;
 
   DashboardModel();
 
-  init() {
-    test = BehaviorSubject<ResponsiveRowColumnType>.seeded(ResponsiveRowColumnType.COLUMN);
-  }
-
-  click() {
-    var item = test.value == ResponsiveRowColumnType.COLUMN
-        ? ResponsiveRowColumnType.ROW
-        : ResponsiveRowColumnType.COLUMN;
-
-    test.add(item);
+  changeView(RoutingEnum newView) {
+    _currentView = newView;
     notifyListeners();
   }
 

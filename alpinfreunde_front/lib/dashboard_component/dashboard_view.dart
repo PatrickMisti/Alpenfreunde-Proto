@@ -1,56 +1,100 @@
+import 'package:alpinfreunde_front/base/parent_component.dart';
 import 'package:alpinfreunde_front/dashboard_component/dashboard_model.dart';
+import 'package:alpinfreunde_front/routing.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:stacked/stacked.dart';
 
-class DashboardView extends StackedView<DashboardModel> {
-  const DashboardView({super.key});
+class DashboardView extends StackedView<DashboardModel>
+    implements IParentComponent {
+  DashboardView({super.key});
+
+  final Duration _animationDuration = const Duration(milliseconds: 200);
+  Color dividerColor = Colors.black;
+
+  getDrawer(BuildContext context, DashboardModel vm) {
+    return ResponsiveRowColumnItem(
+      child: ResponsiveVisibility(
+        visible: ResponsiveBreakpoints.of(context).isDesktop,
+        child: Expanded(
+          flex: 2,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(color: dividerColor, width: 1),
+              ),
+            ),
+            child: Column(
+              children: (vm.sidebar
+                  .map((e) => ListTile(
+                        onTap: () {
+                          vm.changeView(e.routing);
+                        },
+                        title: Row(
+                          children: [
+                            e.icons,
+                            Container(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Text(
+                                e.title,
+                              ),
+                            )
+                          ],
+                        ),
+                      ))
+                  .toList()),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  getBottomNav(BuildContext context, DashboardModel vm) {
+    if (!ResponsiveBreakpoints.of(context).isMobile) return null;
+
+    return BottomNavigationBar(//todo change view not work correctly
+        onTap: (value) {
+          var index = vm.sidebar[value - 1];
+          debugPrint(value.toString());
+          vm.changeView(index.routing);
+        },
+        items: (vm.sidebar.map(
+          (e) => BottomNavigationBarItem(
+            icon: e.icons,
+            label: e.title,
+          ),
+        )).toList());
+  }
 
   @override
   Widget builder(
       BuildContext context, DashboardModel viewModel, Widget? child) {
     return Scaffold(
-      body: Center(
-        child: ResponsiveRowColumn(
-          layout: viewModel.test.value,
-          columnCrossAxisAlignment: CrossAxisAlignment.center,
-          columnMainAxisAlignment: MainAxisAlignment.center,
-          rowCrossAxisAlignment: CrossAxisAlignment.center,
-          rowMainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const ResponsiveRowColumnItem(
-              columnFlex: 1,
-              child: Text("datadata"),
-            ),
-            const ResponsiveRowColumnItem(
-              columnFlex: 2,
-              columnFit: FlexFit.tight,
-              child: Text("datadata"),
-            ),
-            ResponsiveRowColumnItem(
-              columnFlex: 3,
-              columnFit: FlexFit.tight,
-              child: OutlinedButton(
-                onPressed: viewModel.click,
-                child: Text("Click me!"),
+      appBar: AppBar(title: const Text("data")),
+      body: ResponsiveRowColumn(
+        layout: ResponsiveRowColumnType.ROW,
+        children: [
+          getDrawer(context, viewModel),
+          ResponsiveRowColumnItem(
+            rowFlex: 6,
+            child: AnimatedSwitcher(
+              duration: _animationDuration,
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: child,
               ),
-            )
-          ],
-        ),
+              child: Routing.nestedRouting(viewModel.currentRoute),
+            ),
+          )
+        ],
       ),
-      bottomNavigationBar: ResponsiveBreakpoints.of(context).isMobile
-          ? BottomNavigationBar(items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.add_box_rounded), label: "Add"),
-              BottomNavigationBarItem(icon: Icon(Icons.create), label: "Edit")
-            ])
-          : null,
+      bottomNavigationBar: getBottomNav(context, viewModel),
     );
   }
 
   @override
   DashboardModel viewModelBuilder(BuildContext context) {
-    return DashboardModel()..init();
+    return DashboardModel();
   }
 }
