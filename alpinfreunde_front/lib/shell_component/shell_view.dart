@@ -11,15 +11,16 @@ class ShellView extends StackedView<ShellModel> implements IParentComponent {
 
   @override
   Widget builder(BuildContext context, ShellModel viewModel, Widget? child) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'AlpinFreunde',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      onGenerateRoute: Routing.onGenerateRoute,
-      initialRoute: RoutingEnum.dashboard.name,
+      // onGenerateRoute: Routing.onGenerateRoute,
+      // initialRoute: RoutingEnum.dashboard.name,
+      routerConfig: Routing.routerOutlet,
       builder: (context, child) => ResponsiveBreakpoints(
         breakpoints: const [
           Breakpoint(start: 0, end: 800, name: MOBILE),

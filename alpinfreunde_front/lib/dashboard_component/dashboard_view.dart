@@ -2,6 +2,7 @@ import 'package:alpinfreunde_front/base/parent_component.dart';
 import 'package:alpinfreunde_front/dashboard_component/dashboard_model.dart';
 import 'package:alpinfreunde_front/routing.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:stacked/stacked.dart';
 
@@ -84,7 +85,7 @@ class DashboardView extends StackedView<DashboardModel>
                 scale: animation,
                 child: child,
               ),
-              child: Routing.nestedRouting(viewModel.currentRoute),
+              child: Go,
             ),
           )
         ],
